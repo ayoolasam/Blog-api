@@ -18,6 +18,16 @@ exports.isAuthenticated = catchAsyncErrors(async (req, res, next) => {
 
   req.user = await User.findById(decoded.id);
 
-
   next();
 });
+
+exports.authorizeRoles = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.include(req.user.role)) {
+      return next(
+        new ErrorHandler("You are not authorized to access this resource", 401)
+      );
+    }
+    next();
+  };
+};

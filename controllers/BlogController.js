@@ -116,7 +116,7 @@ exports.deleteBlog = catchAsyncErrors(async (req, res, next) => {
     return next(new errorHandler("blog not found"));
   }
 
-  if (blog.author.toString() !== req.user.id) {
+  if (blog.author.toString() !== req.user.id && req.user.role !== "admin" ) {
     return next(new errorHandler("Not authorized to delete this blog"));
   }
 
