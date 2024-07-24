@@ -31,6 +31,14 @@ const UserSchema = new mongoose.Schema(
     resetPasswordExpired: {
       type: Date,
     },
+    followers: [{
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+    }],
+    following: [{
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+    }],
   },
   {
     timestamps: true,

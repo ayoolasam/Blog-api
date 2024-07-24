@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const BlogRoutes = require("./routes/BlogRoutes");
 const authRoutes = require("./routes/authRoutes");
 const commentRoutes = require("./routes/comment")
+const followRoutes = require("./routes/Followers")
 const errorMiddleware = require("./middlewares/errors");
 const cookieParser = require("cookie-parser");
 
@@ -18,6 +19,7 @@ app.use(cookieParser());
 app.use("/api/v1", BlogRoutes);
 app.use("/api/v1", authRoutes);
 app.use("/api/v1", commentRoutes);
+app.use("/api/v1", followRoutes);
 
 app.use(errorMiddleware);
 const PORT = process.env.PORT || 7000;
