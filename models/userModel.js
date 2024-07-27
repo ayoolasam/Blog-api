@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
 const UserSchema = new mongoose.Schema(
   {
@@ -31,14 +32,18 @@ const UserSchema = new mongoose.Schema(
     resetPasswordExpired: {
       type: Date,
     },
-    followers: [{
-      type: mongoose.Schema.ObjectId,
-      ref: 'User',
-    }],
-    following: [{
-      type: mongoose.Schema.ObjectId,
-      ref: 'User',
-    }],
+    followers: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+    ],
+    following: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     timestamps: true,
@@ -60,6 +65,18 @@ UserSchema.methods.generateToken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
+};
+
+UserSchema.methods.getResetPasswordToken = function () {
+  const resetToken = crypto.randomBytes(20).toString("hex");
+
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  this.resetPasswordExpired = Date.now() + 30 * 60 * 1000;
+  return resetToken;
 };
 
 const User = mongoose.model("User", UserSchema);

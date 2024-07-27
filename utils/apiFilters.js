@@ -40,6 +40,19 @@ class Apifilters {
     }
     return this;
   }
-}
+  search(){
+   
+      const keyword = this.queryStr.keyword ? {
+        title:{
+          $regex:this.queryStr.keyword,
+          $options: "i"
+        },
+      }
+      :{};
+      this.query = this.query.find({...keyword})
+      return this;
+
+    }
+  }
 
 module.exports = Apifilters;

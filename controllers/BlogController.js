@@ -78,7 +78,7 @@ exports.getBlogs = catchAsyncErrors(async (req, res, next) => {
   const Apifilters = new APIfilters(Blog.find(), req.query)
     .filter()
     .sort()
-    .limitFields();
+    .limitFields().search();
 
   const blogs = await Apifilters.query;
 
@@ -116,7 +116,7 @@ exports.deleteBlog = catchAsyncErrors(async (req, res, next) => {
     return next(new errorHandler("blog not found"));
   }
 
-  if (blog.author.toString() !== req.user.id && req.user.role !== "admin" ) {
+  if (blog.author.toString() !== req.user.id && req.user.role !== "admin") {
     return next(new errorHandler("Not authorized to delete this blog"));
   }
 
